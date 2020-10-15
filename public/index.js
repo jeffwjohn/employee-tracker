@@ -104,3 +104,14 @@ const addEmployeeQuestions = [
         choices: ['Jeff Johnston', 'Mandy Moore', 'James Bond', 'Matt Damon', 'No manager assigned']
     }
 ];
+
+// Initialize program
+const startProgram = () => {
+    return inquirer.prompt(questions).then(answers => {
+        if (answers.todo === 'View all departments') {
+            return 
+        }
+    })
+}
+
+'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee','Update an employee role'
