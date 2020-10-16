@@ -2,7 +2,7 @@
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
 // const viewAllDepts = require('./queries/depts');
-// const toDoQuestion = require('./public/lib/index.js');
+const {addDeptQuestions} = require('./public/lib/index.js');
 // const { startProgram } = require('./public/lib/index.js');
 
 // create the connection to database
@@ -36,6 +36,8 @@ function mainMenu() {
                 viewAllRoles();
             } else if (response.todo === 'View all employees') {
                 viewAllEmployees();
+            } else if (response.todo === 'Add a department') {
+                addDept();
             }
         })
 };
@@ -66,6 +68,23 @@ function viewAllEmployees() {
     });
 
 };
+
+function addDept() {
+    inquirer.prompt(addDeptQuestions)
+    .then(answers => {
+        console.log(answers.addDept);
+        connection.query('INSERT INTO department SET ?', 
+             {name: answers.addDept},
+        
+            (err, res) => {
+                if (err) throw err;
+                console.table(res);
+                mainMenu();
+            });
+    })
+};
+
+
 
 module.exports = {
     connection

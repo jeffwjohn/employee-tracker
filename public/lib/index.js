@@ -110,34 +110,34 @@ const addEmployeeQuestions = [
     }
 ];
 
-const viewAllDepts = () => {
-    const query = connection.query('SELECT * FROM department',
+// const viewAllDepts = () => {
+//     const query = connection.query('SELECT * FROM department',
     
-    function (err, res) {
-        if(err) throw err;
-        console.table(res);
-     });
+//     function (err, res) {
+//         if(err) throw err;
+//         console.table(res);
+//      });
     
-}
+// }
 
 // Initialize program
-const startProgram = () => {
-    return inquirer.prompt(toDoQuestion).then(answers => {
-            return answers;
-        }).then(answers => {
-        if (answers.todo === 'View all departments') {
-            viewAllDepts();
-            return answers;
-    }
+// const startProgram = () => {
+//     return inquirer.prompt(toDoQuestion).then(answers => {
+//             return answers;
+//         }).then(answers => {
+//         if (answers.todo === 'View all departments') {
+//             viewAllDepts();
+//             return answers;
+//     }
    
-    })
-};
+//     })
+// };
 
 // 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee','Update an employee role'
 
 // startProgram();
 
-module.exports = {startProgram, toDoQuestion};
+module.exports = {addDeptQuestions};
 
     // addDeptQuestions,
     // addRoleQuestions,
