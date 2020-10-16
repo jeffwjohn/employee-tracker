@@ -1,10 +1,15 @@
+const mysql = require ('mysql2');
 const inquirer = require('inquirer');
-const Employee = require('./lib/Employee');
-const Role = require('./lib/Role');
-const Department = require('./lib/Department');
+const consoleTable = require('console.table');
+const { connection } = require('../../server');
+// const viewAllDepts = require('../../queries/depts');
+const Employee = require('./Employee');
+const Role = require('./Role');
+const Department = require('./Department');
 const teamArray = [];
 
-const questions = [
+
+const toDoQuestion = [
     {
         type: 'list',
         name: 'todo',
@@ -105,13 +110,35 @@ const addEmployeeQuestions = [
     }
 ];
 
-// Initialize program
-const startProgram = () => {
-    return inquirer.prompt(questions).then(answers => {
-        if (answers.todo === 'View all departments') {
-            return 
-        }
-    })
+const viewAllDepts = () => {
+    const query = connection.query('SELECT * FROM department',
+    
+    function (err, res) {
+        if(err) throw err;
+        console.table(res);
+     });
+    
 }
 
-'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee','Update an employee role'
+// Initialize program
+const startProgram = () => {
+    return inquirer.prompt(toDoQuestion).then(answers => {
+            return answers;
+        }).then(answers => {
+        if (answers.todo === 'View all departments') {
+            viewAllDepts();
+            return answers;
+    }
+   
+    })
+};
+
+// 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee','Update an employee role'
+
+// startProgram();
+
+module.exports = {startProgram, toDoQuestion};
+
+    // addDeptQuestions,
+    // addRoleQuestions,
+    // addEmployeeQuestions
