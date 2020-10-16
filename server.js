@@ -4,7 +4,8 @@ const inquirer = require('inquirer');
 // const viewAllDepts = require('./queries/depts');
 const {
     addDeptQuestions,
-    addRoleQuestions
+    addRoleQuestions,
+    addEmployeeQuestions
 } = require('./public/lib/index.js');
 // const { startProgram } = require('./public/lib/index.js');
 
@@ -43,6 +44,8 @@ function mainMenu() {
                 addDept();
             } else if (response.todo === 'Add a role') {
                 addRole();
+            } else if (response.todo === 'Add an employee') {
+                addEmployee();
             }
         })
 };
@@ -108,7 +111,24 @@ function addRole() {
         })
 };
 
+function addEmployee() {
+    inquirer.prompt(addEmployeeQuestions)
+        .then(answers => {
+            console.log(answers);
+            connection.query('INSERT INTO employee SET ?', {
+                    first_name: answers.firstName,
+                    last_name: answers.lastName,
+                    role_id: answers.role,
+                    manager_id: answers.manager
+                },
 
+                (err, res) => {
+                    if (err) throw err;
+                    console.table(res);
+                    mainMenu();
+                });
+        })
+};
 
 module.exports = {
     connection

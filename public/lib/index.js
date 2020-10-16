@@ -1,7 +1,9 @@
-const mysql = require ('mysql2');
+const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const consoleTable = require('console.table');
-const { connection } = require('../../server');
+const {
+    connection
+} = require('../../server');
 // const viewAllDepts = require('../../queries/depts');
 const Employee = require('./Employee');
 const Role = require('./Role');
@@ -9,33 +11,28 @@ const Department = require('./Department');
 const teamArray = [];
 
 
-const toDoQuestion = [
-    {
-        type: 'list',
-        name: 'todo',
-        message: 'What would you like to do?',
-        choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee','Update an employee role']
-    }
-];
+const toDoQuestion = [{
+    type: 'list',
+    name: 'todo',
+    message: 'What would you like to do?',
+    choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role']
+}];
 
-const addDeptQuestions = [
-    {
-        type: 'input',
-        name: 'addDept',
-        message: 'Enter the name of the department.',
-        validate: nameInput => {
-            if (nameInput) {
-                return true;
-            } else {
-                console.log("Please enter the department name!");
-                return false;
-            }
+const addDeptQuestions = [{
+    type: 'input',
+    name: 'addDept',
+    message: 'Enter the name of the department.',
+    validate: nameInput => {
+        if (nameInput) {
+            return true;
+        } else {
+            console.log("Please enter the department name!");
+            return false;
         }
     }
-];
+}];
 
-const addRoleQuestions = [
-    {
+const addRoleQuestions = [{
         type: 'input',
         name: 'role',
         message: 'Enter the role name.',
@@ -65,12 +62,23 @@ const addRoleQuestions = [
         type: 'list',
         name: 'department',
         message: 'What department does this role belong to?',
-        choices: [{name: 'Sales', value: 1}, {name: 'Engineering', value: 2}, {name: 'Finance', value: 3}, {name: 'Legal', value: 4}]
+        choices: [{
+            name: 'Sales',
+            value: 1
+        }, {
+            name: 'Engineering',
+            value: 2
+        }, {
+            name: 'Finance',
+            value: 3
+        }, {
+            name: 'Legal',
+            value: 4
+        }]
     }
 ];
 
-const addEmployeeQuestions = [
-    {
+const addEmployeeQuestions = [{
         type: 'input',
         name: 'firstName',
         message: "Enter the employee's first name.",
@@ -100,24 +108,48 @@ const addEmployeeQuestions = [
         type: 'list',
         name: 'role',
         message: "Enter the employee's role.",
-        choices: ['Salesperson', 'Software Engineer', 'Accountant', 'Lawyer']
+        choices: [{
+            name: 'Salesperson',
+            value: 1
+        }, {
+            name: 'Software Engineer',
+            value: 2
+        }, {
+            name: 'Accountant',
+            value: 3
+        }, {
+            name: 'Lawyer',
+            value: 4
+        }]
     },
     {
         type: 'list',
         name: 'manager',
         message: "Who is the employee's manager?",
-        choices: ['Jeff Johnston', 'Mandy Moore', 'James Bond', 'Matt Damon', 'No manager assigned']
+        choices: [{
+            name: 'Jeff Johnston',
+            value: 1
+        }, {
+            name: 'Mandy Moore',
+            value: 2
+        }, {
+            name: 'Matt Damon',
+            value: 3
+        }, {
+            name: 'No manager assigned',
+            value: null
+        }]
     }
 ];
 
 // const viewAllDepts = () => {
 //     const query = connection.query('SELECT * FROM department',
-    
+
 //     function (err, res) {
 //         if(err) throw err;
 //         console.table(res);
 //      });
-    
+
 // }
 
 // Initialize program
@@ -129,7 +161,7 @@ const addEmployeeQuestions = [
 //             viewAllDepts();
 //             return answers;
 //     }
-   
+
 //     })
 // };
 
@@ -137,8 +169,12 @@ const addEmployeeQuestions = [
 
 // startProgram();
 
-module.exports = {addDeptQuestions, addRoleQuestions};
+module.exports = {
+    addDeptQuestions,
+    addRoleQuestions,
+    addEmployeeQuestions
+};
 
-    // addDeptQuestions,
-    // addRoleQuestions,
-    // addEmployeeQuestions
+// addDeptQuestions,
+// addRoleQuestions,
+// addEmployeeQuestions
