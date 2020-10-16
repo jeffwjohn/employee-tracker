@@ -8,6 +8,7 @@ const {
 const Employee = require('./Employee');
 const Role = require('./Role');
 const Department = require('./Department');
+const { listenerCount } = require('process');
 const teamArray = [];
 
 
@@ -142,6 +143,30 @@ const addEmployeeQuestions = [{
     }
 ];
 
+const updateEmployeeRoleQuestions = [{
+    type: 'input',
+    name: 'employees',
+    message: 'Enter ID of employee to update.'
+},
+{
+    type: 'list',
+    name: 'role',
+    message: 'Choose new employee role.',
+    choices: [{
+        name: 'Salesperson',
+        value: 1
+    }, {
+        name: 'Software Engineer',
+        value: 2
+    }, {
+        name: 'Accountant',
+        value: 3
+    }, {
+        name: 'Lawyer',
+        value: 4
+    }]
+}
+]
 // const viewAllDepts = () => {
 //     const query = connection.query('SELECT * FROM department',
 
@@ -172,7 +197,8 @@ const addEmployeeQuestions = [{
 module.exports = {
     addDeptQuestions,
     addRoleQuestions,
-    addEmployeeQuestions
+    addEmployeeQuestions,
+    updateEmployeeRoleQuestions
 };
 
 // addDeptQuestions,

@@ -1,13 +1,14 @@
 // get the client
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
-// const viewAllDepts = require('./queries/depts');
+const cTable = require('console.table');
+const Table = require('easy-table');
 const {
     addDeptQuestions,
     addRoleQuestions,
-    addEmployeeQuestions
+    addEmployeeQuestions,
+    updateEmployeeRoleQuestions
 } = require('./public/lib/index.js');
-// const { startProgram } = require('./public/lib/index.js');
 
 // create the connection to database
 const connection = mysql.createConnection({
@@ -22,7 +23,6 @@ connection.connect(err => {
     if (err) throw err;
     console.log('connected as id ' + connection.threadId + '\n');
     mainMenu();
-    // startProgram()
 });
 
 function mainMenu() {
@@ -30,7 +30,7 @@ function mainMenu() {
             type: 'list',
             name: 'todo',
             message: 'What would you like to do?',
-            choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role']
+            choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Exit \n']
         }])
         .then(response => {
             console.log(response)
@@ -46,6 +46,10 @@ function mainMenu() {
                 addRole();
             } else if (response.todo === 'Add an employee') {
                 addEmployee();
+            } else if (response.todo === 'Update an employee role') {
+                updateEmployeeRole();
+            } else {
+                connection.end();
             }
         })
 };
@@ -130,17 +134,40 @@ function addEmployee() {
         })
 };
 
-module.exports = {
-    connection
+function updateEmployeeRole() {
+
+    connection.query('SELECT * FROM employee', (err, res) => {
+        if (err) throw err;
+        var t = new Table;
+        res.forEach(employee => {
+            t.cell('Employee ID', employee.id)
+            t.cell('first name', employee.first_name)
+            t.cell('last name', employee.last_name)
+            t.newRow()
+        })
+        console.log(t.toString())
+
+        inquirer.prompt(updateEmployeeRoleQuestions)
+            .then(answers => {
+                console.log(answers);
+                mainMenu();
+            })
+
+    })
+    
 };
-// execute will internally call prepare and query
-// connection.query(
-//   'SELECT * FROM role',
-//   function(err, results, fields) {
-//     console.table(results); // results contains rows returned by server
 
-//     // If you execute same statement again, it will be picked from a LRU cache
-//     // which will save query preparation time and give better performance
+    module.exports = {
+        connection
+    };
+    // execute will internally call prepare and query
+    // connection.query(
+    //   'SELECT * FROM role',
+    //   function(err, results, fields) {
+    //     console.table(results); // results contains rows returned by server
 
-//   }
-// );
+    //     // If you execute same statement again, it will be picked from a LRU cache
+    //     // which will save query preparation time and give better performance
+
+    //   }
+    // );
