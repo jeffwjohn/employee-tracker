@@ -5,8 +5,6 @@ const inquirer = require('inquirer');
 // const toDoQuestion = require('./public/lib/index.js');
 // const { startProgram } = require('./public/lib/index.js');
 
-
-
 // create the connection to database
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -32,21 +30,42 @@ function mainMenu() {
         }])
         .then(response => {
             console.log(response)
-            if(response.todo = 'View all departments') {
+            if (response.todo === 'View all departments') {
                 viewAllDepts();
+            } else if (response.todo === 'View all roles') {
+                viewAllRoles();
+            } else if (response.todo === 'View all employees') {
+                viewAllEmployees();
             }
         })
 };
 
 function viewAllDepts() {
     connection.query('SELECT * FROM department', (err, res) => {
-        if(err) throw err;
+        if (err) throw err;
         console.table(res);
         mainMenu();
-     });
-    
+    });
+
 };
 
+function viewAllRoles() {
+    connection.query('SELECT * FROM role', (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        mainMenu();
+    });
+
+};
+
+function viewAllEmployees() {
+    connection.query('SELECT * FROM employee', (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        mainMenu();
+    });
+
+};
 
 module.exports = {
     connection
