@@ -2,7 +2,10 @@
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
 // const viewAllDepts = require('./queries/depts');
-const {addDeptQuestions} = require('./public/lib/index.js');
+const {
+    addDeptQuestions,
+    addRoleQuestions
+} = require('./public/lib/index.js');
 // const { startProgram } = require('./public/lib/index.js');
 
 // create the connection to database
@@ -38,6 +41,8 @@ function mainMenu() {
                 viewAllEmployees();
             } else if (response.todo === 'Add a department') {
                 addDept();
+            } else if (response.todo === 'Add a role') {
+                addRole();
             }
         })
 };
@@ -71,17 +76,36 @@ function viewAllEmployees() {
 
 function addDept() {
     inquirer.prompt(addDeptQuestions)
-    .then(answers => {
-        console.log(answers.addDept);
-        connection.query('INSERT INTO department SET ?', 
-             {name: answers.addDept},
-        
-            (err, res) => {
-                if (err) throw err;
-                console.table(res);
-                mainMenu();
-            });
-    })
+        .then(answers => {
+            console.log(answers.addDept);
+            connection.query('INSERT INTO department SET ?', {
+                    name: answers.addDept
+                },
+
+                (err, res) => {
+                    if (err) throw err;
+                    console.table(res);
+                    mainMenu();
+                });
+        })
+};
+
+function addRole() {
+    inquirer.prompt(addRoleQuestions)
+        .then(answers => {
+            console.log(answers);
+            connection.query('INSERT INTO role SET ?', {
+                    title: answers.role,
+                    salary: answers.salary,
+                    department_id: answers.department
+                },
+
+                (err, res) => {
+                    if (err) throw err;
+                    console.table(res);
+                    mainMenu();
+                });
+        })
 };
 
 

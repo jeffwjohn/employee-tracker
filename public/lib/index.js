@@ -65,7 +65,7 @@ const addRoleQuestions = [
         type: 'list',
         name: 'department',
         message: 'What department does this role belong to?',
-        choices: ['Sales', 'Engineering', 'Finance', 'Legal']
+        choices: [{name: 'Sales', value: 1}, {name: 'Engineering', value: 2}, {name: 'Finance', value: 3}, {name: 'Legal', value: 4}]
     }
 ];
 
@@ -137,7 +137,7 @@ const addEmployeeQuestions = [
 
 // startProgram();
 
-module.exports = {addDeptQuestions};
+module.exports = {addDeptQuestions, addRoleQuestions};
 
     // addDeptQuestions,
     // addRoleQuestions,
