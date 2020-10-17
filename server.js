@@ -4,13 +4,16 @@ const inquirer = require('inquirer');
 const cTable = require('console.table');
 const Table = require('easy-table');
 const {
+    toDoQuestion ,
     addDeptQuestions,
     addRoleQuestions,
     addEmployeeQuestions,
     updateEmployeeRoleQuestions
 } = require('./public/lib/index.js');
 const Department = require('./public/lib/Department');
+const Role = require('./public/lib/Role');
 var addRoleChoiceArray = [];
+var addEmployeeChoiceArray = [];
 
 
 // create the connection to database
@@ -30,14 +33,9 @@ connection.connect(err => {
 });
 
 function mainMenu() {
-    inquirer.prompt([{
-            type: 'list',
-            name: 'todo',
-            message: 'What would you like to do?',
-            choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Exit \n']
-        }])
+    inquirer.prompt(toDoQuestion)
         .then(response => {
-            console.log(response)
+
             switch (response.todo) {
                 case ('View all departments'):
                     viewAllDepts();
@@ -96,47 +94,26 @@ function viewAllEmployees() {
 function addDept() {
     inquirer.prompt(addDeptQuestions)
         .then(answers => {
-            console.log(answers.addDept);
+
             connection.query('INSERT INTO department SET ?', {
-                    name: answers.addDept
+                    name: answers.name
 
                 },
-
                 (err, res) => {
                     if (err) throw err;
-                    console.log(res);
-                    console.log(answers.name, res.insertId);
-                    console.log('Answers:', answers);
+
                     var department = new Department(
-                        answers.addDept,
+                        answers.name,
                         res.insertId
                     );
 
-                    addRoleChoiceArray = addRoleQuestions[2].choices;
-                    console.log('Array:', addRoleChoiceArray);
-                    console.log(department);
-                    addRoleChoiceArray.push(department);
-                    console.log('Array2:', addRoleChoiceArray);
-                    // addRoleQuestions[2].choices.push(this.department);
-                    console.log(addRoleQuestions);
-                    // viewAllDepts();
+                    // addRoleChoiceArray = addRoleQuestions[2].choices;
+                    // addRoleChoiceArray.push(department);
+                    addRoleQuestions[2].choices.push(department);
                     mainMenu();
                 });
         })
 };
-
-
-// const addDept = () => {
-//     inquirer.prompt(addDeptQuestions)
-//         .then(answers => {
-//             console.log(answers.addDept);
-//             connection.query('INSERT INTO department SET ?', answers.addDept)
-//             })
-//         .then(()=> {
-//             viewAllDepts();
-//             mainMenu();
-//         })  
-// };
 
 function addRole() {
     inquirer.prompt(addRoleQuestions)
@@ -149,7 +126,15 @@ function addRole() {
 
                 (err, res) => {
                     if (err) throw err;
-                    console.log(res);
+
+                    var role = new Role(
+                        answers.role,
+                        answers.salary,
+                        answers.department
+                    );
+
+                    addEmployeeQuestions[2].choices.push(role);
+                    updateEmployeeRoleQuestions[1].choices.push(role);
                     mainMenu();
                 });
         })
@@ -158,7 +143,7 @@ function addRole() {
 function addEmployee() {
     inquirer.prompt(addEmployeeQuestions)
         .then(answers => {
-            console.log(answers);
+
             connection.query('INSERT INTO employee SET ?', {
                     first_name: answers.firstName,
                     last_name: answers.lastName,
@@ -167,8 +152,7 @@ function addEmployee() {
                 },
 
                 (err, res) => {
-                    if (err) throw err;
-                    console.table(res);
+                    if (err) throw err; 
                     mainMenu();
                 });
         })
@@ -189,7 +173,7 @@ function updateEmployeeRole() {
 
         inquirer.prompt(updateEmployeeRoleQuestions)
             .then(answers => {
-                console.log(answers);
+
                 connection.query('UPDATE employee SET role_id = ? WHERE id = ?',
                     [answers.role, answers.employeeId],
 
@@ -209,14 +193,3 @@ function updateEmployeeRole() {
 module.exports = {
     connection
 };
-// execute will internally call prepare and query
-// connection.query(
-//   'SELECT * FROM role',
-//   function(err, results, fields) {
-//     console.table(results); // results contains rows returned by server
-
-//     // If you execute same statement again, it will be picked from a LRU cache
-//     // which will save query preparation time and give better performance
-
-//   }
-// );

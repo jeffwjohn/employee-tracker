@@ -4,13 +4,8 @@ const consoleTable = require('console.table');
 const {
     connection
 } = require('../../server');
-// const viewAllDepts = require('../../queries/depts');
-const Employee = require('./Employee');
-const Role = require('./Role');
-const Department = require('./Department');
 const { listenerCount } = require('process');
-const teamArray = [];
-const deptArray = [];
+
 
 
 const toDoQuestion = [{
@@ -22,11 +17,10 @@ const toDoQuestion = [{
 
 const addDeptQuestions = [{
     type: 'input',
-    name: 'addDept',
+    name: 'name',
     message: 'Enter the name of the department.',
     validate: nameInput => {
         if (nameInput) {
-        deptArray.push(nameInput);
             return true;
         } else {
             console.log("Please enter the department name!");
@@ -169,40 +163,12 @@ const updateEmployeeRoleQuestions = [{
     }]
 }
 ]
-// const viewAllDepts = () => {
-//     const query = connection.query('SELECT * FROM department',
-
-//     function (err, res) {
-//         if(err) throw err;
-//         console.table(res);
-//      });
-
-// }
-
-// Initialize program
-// const startProgram = () => {
-//     return inquirer.prompt(toDoQuestion).then(answers => {
-//             return answers;
-//         }).then(answers => {
-//         if (answers.todo === 'View all departments') {
-//             viewAllDepts();
-//             return answers;
-//     }
-
-//     })
-// };
-
-// 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee','Update an employee role'
-
-// startProgram();
 
 module.exports = {
+    toDoQuestion,
     addDeptQuestions,
     addRoleQuestions,
     addEmployeeQuestions,
     updateEmployeeRoleQuestions
 };
 
-// addDeptQuestions,
-// addRoleQuestions,
-// addEmployeeQuestions
