@@ -22,6 +22,7 @@ const connection = mysql.createConnection({
 connection.connect(err => {
     if (err) throw err;
     console.log('connected as id ' + connection.threadId + '\n');
+    console.log("\n Employee Manager \n");
     mainMenu();
 });
 
@@ -150,24 +151,33 @@ function updateEmployeeRole() {
         inquirer.prompt(updateEmployeeRoleQuestions)
             .then(answers => {
                 console.log(answers);
-                mainMenu();
+                connection.query('UPDATE employee SET role_id = ? WHERE id = ?', 
+                        [answers.role, answers.employeeId],
+                    
+                    (err, res) => {
+                        if (err) throw err;
+                        console.table(res);
+                        mainMenu();
+                    }
+                )
+                
             })
 
     })
-    
+
 };
 
-    module.exports = {
-        connection
-    };
-    // execute will internally call prepare and query
-    // connection.query(
-    //   'SELECT * FROM role',
-    //   function(err, results, fields) {
-    //     console.table(results); // results contains rows returned by server
+module.exports = {
+    connection
+};
+// execute will internally call prepare and query
+// connection.query(
+//   'SELECT * FROM role',
+//   function(err, results, fields) {
+//     console.table(results); // results contains rows returned by server
 
-    //     // If you execute same statement again, it will be picked from a LRU cache
-    //     // which will save query preparation time and give better performance
+//     // If you execute same statement again, it will be picked from a LRU cache
+//     // which will save query preparation time and give better performance
 
-    //   }
-    // );
+//   }
+// );

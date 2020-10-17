@@ -145,7 +145,7 @@ const addEmployeeQuestions = [{
 
 const updateEmployeeRoleQuestions = [{
     type: 'input',
-    name: 'employees',
+    name: 'employeeId',
     message: 'Enter ID of employee to update.'
 },
 {
