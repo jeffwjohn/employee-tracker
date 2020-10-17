@@ -9,6 +9,8 @@ const {
     addEmployeeQuestions,
     updateEmployeeRoleQuestions
 } = require('./public/lib/index.js');
+const Department = require('./public/lib/Department');
+
 
 // create the connection to database
 const connection = mysql.createConnection({
@@ -82,17 +84,29 @@ function viewAllEmployees() {
 
 };
 
-function addDept() {
+const addDept = () => {
     inquirer.prompt(addDeptQuestions)
         .then(answers => {
             console.log(answers.addDept);
             connection.query('INSERT INTO department SET ?', {
                     name: answers.addDept
+
                 },
 
                 (err, res) => {
                     if (err) throw err;
-                    console.table(res);
+                    console.log(res);
+                    console.log(answers.name, res.insertId);
+                    console.log('Answers:', answers);
+                    this.department = new Department(
+                        answers.addDept,
+                        res.insertId
+                    );
+                    console.log(this.department);
+                    choiceA
+                    addRoleQuestions[2].choices.push(this.department);
+                    console.log(addRoleQuestions);
+                    viewAllDepts();
                     mainMenu();
                 });
         })
@@ -151,16 +165,16 @@ function updateEmployeeRole() {
         inquirer.prompt(updateEmployeeRoleQuestions)
             .then(answers => {
                 console.log(answers);
-                connection.query('UPDATE employee SET role_id = ? WHERE id = ?', 
-                        [answers.role, answers.employeeId],
-                    
+                connection.query('UPDATE employee SET role_id = ? WHERE id = ?',
+                    [answers.role, answers.employeeId],
+
                     (err, res) => {
                         if (err) throw err;
                         console.table(res);
                         mainMenu();
                     }
                 )
-                
+
             })
 
     })
