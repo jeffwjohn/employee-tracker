@@ -10,6 +10,7 @@ const {
     updateEmployeeRoleQuestions
 } = require('./public/lib/index.js');
 const Department = require('./public/lib/Department');
+var addRoleChoiceArray = [];
 
 
 // create the connection to database
@@ -37,22 +38,30 @@ function mainMenu() {
         }])
         .then(response => {
             console.log(response)
-            if (response.todo === 'View all departments') {
-                viewAllDepts();
-            } else if (response.todo === 'View all roles') {
-                viewAllRoles();
-            } else if (response.todo === 'View all employees') {
-                viewAllEmployees();
-            } else if (response.todo === 'Add a department') {
-                addDept();
-            } else if (response.todo === 'Add a role') {
-                addRole();
-            } else if (response.todo === 'Add an employee') {
-                addEmployee();
-            } else if (response.todo === 'Update an employee role') {
-                updateEmployeeRole();
-            } else {
-                connection.end();
+            switch (response.todo) {
+                case ('View all departments'):
+                    viewAllDepts();
+                    break;
+                case ('View all roles'):
+                    viewAllRoles();
+                    break;
+                case ('View all employees'):
+                    viewAllEmployees();
+                    break;
+                case ('Add a department'):
+                    addDept();
+                    break;
+                case ('Add a role'):
+                    addRole();
+                    break;
+                case ('Add an employee'):
+                    addEmployee();
+                    break;
+                case ('Update an employee role'):
+                    updateEmployeeRole();
+                    break;
+                case ('Exit \n'):
+                    connection.end();
             }
         })
 };
@@ -84,7 +93,7 @@ function viewAllEmployees() {
 
 };
 
-const addDept = () => {
+function addDept() {
     inquirer.prompt(addDeptQuestions)
         .then(answers => {
             console.log(answers.addDept);
@@ -98,24 +107,40 @@ const addDept = () => {
                     console.log(res);
                     console.log(answers.name, res.insertId);
                     console.log('Answers:', answers);
-                    this.department = new Department(
+                    var department = new Department(
                         answers.addDept,
                         res.insertId
                     );
-                    console.log(this.department);
-                    choiceA
-                    addRoleQuestions[2].choices.push(this.department);
+
+                    addRoleChoiceArray = addRoleQuestions[2].choices;
+                    console.log('Array:', addRoleChoiceArray);
+                    console.log(department);
+                    addRoleChoiceArray.push(department);
+                    console.log('Array2:', addRoleChoiceArray);
+                    // addRoleQuestions[2].choices.push(this.department);
                     console.log(addRoleQuestions);
-                    viewAllDepts();
+                    // viewAllDepts();
                     mainMenu();
                 });
         })
 };
 
+
+// const addDept = () => {
+//     inquirer.prompt(addDeptQuestions)
+//         .then(answers => {
+//             console.log(answers.addDept);
+//             connection.query('INSERT INTO department SET ?', answers.addDept)
+//             })
+//         .then(()=> {
+//             viewAllDepts();
+//             mainMenu();
+//         })  
+// };
+
 function addRole() {
     inquirer.prompt(addRoleQuestions)
         .then(answers => {
-            console.log(answers);
             connection.query('INSERT INTO role SET ?', {
                     title: answers.role,
                     salary: answers.salary,
@@ -124,7 +149,7 @@ function addRole() {
 
                 (err, res) => {
                     if (err) throw err;
-                    console.table(res);
+                    console.log(res);
                     mainMenu();
                 });
         })

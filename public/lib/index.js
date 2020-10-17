@@ -10,6 +10,7 @@ const Role = require('./Role');
 const Department = require('./Department');
 const { listenerCount } = require('process');
 const teamArray = [];
+const deptArray = [];
 
 
 const toDoQuestion = [{
@@ -25,6 +26,7 @@ const addDeptQuestions = [{
     message: 'Enter the name of the department.',
     validate: nameInput => {
         if (nameInput) {
+        deptArray.push(nameInput);
             return true;
         } else {
             console.log("Please enter the department name!");
