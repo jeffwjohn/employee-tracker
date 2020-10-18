@@ -15,7 +15,7 @@ Employee Tracker is an interactive, MySQL and Node.js-driven application that ca
 
  
 ### Installation
-  Clone or fork the code from the Employee-Tracker repository on GitHub. Open the code in a standard code editing application, such as VS Code.
+  Clone or fork the code from the Employee-Tracker repository on GitHub. Open the code in a standard code editing application, such as VS Code. Be sure to have MySQL, npm inquirer, console.table, easy-table, and chalk installed from the terminal. 
 ### Usage
  Open an intregrated terminal and type the command "node index.js." Follow the prompts to generate your custom company database!
 ### License
