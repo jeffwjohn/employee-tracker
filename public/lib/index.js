@@ -21,40 +21,6 @@ const addDeptQuestions = [{
     }
 }];
 
-const addRoleQuestions = [{
-        type: 'input',
-        name: 'role',
-        message: 'Enter the role name.',
-        validate: nameInput => {
-            if (nameInput) {
-                return true;
-            } else {
-                console.log("Please enter the role name!");
-                return false;
-            }
-        }
-    },
-    {
-        type: 'input',
-        name: 'salary',
-        message: 'Enter the salary paid for this role.',
-        validate: nameInput => {
-            if (nameInput) {
-                return true;
-            } else {
-                console.log("Please enter the salary paid for the role you are creating!");
-                return false;
-            }
-        }
-    },
-    {
-        type: 'list',
-        name: 'department',
-        message: 'What department does this role belong to?',
-        choices: deptArray
-    }
-];
-
 const addEmployeeQuestions = [{
         type: 'input',
         name: 'firstName',
@@ -141,36 +107,24 @@ const addEmployeeQuestions = [{
     }
 ];
 
-const updateEmployeeRoleQuestions = [{
-    type: 'input',
-    name: 'employeeId',
-    message: 'Enter ID of employee to update.'
-},
-{
-    type: 'list',
-    name: 'role',
-    message: 'Choose new employee role.',
-    choices: [{
-        name: 'Salesperson',
-        value: 1
-    }, {
-        name: 'Software Engineer',
-        value: 2
-    }, {
-        name: 'Accountant',
-        value: 3
-    }, {
-        name: 'Lawyer',
-        value: 4
-    }]
-}
-]
+// const updateEmployeeRoleQuestions = [{
+//     type: 'input',
+//     name: 'employeeId',
+//     message: 'Enter ID of employee to update.'
+// },
+// {
+//     type: 'list',
+//     name: 'role',
+//     message: 'Choose new employee role.',
+//     choices: roleArray
+// }
+// ]
 
 module.exports = {
     toDoQuestion,
     addDeptQuestions,
-    addRoleQuestions,
-    addEmployeeQuestions,
-    updateEmployeeRoleQuestions
+    // addRoleQuestions,
+    // addEmployeeQuestions
+    // updateEmployeeRoleQuestions
 };
 

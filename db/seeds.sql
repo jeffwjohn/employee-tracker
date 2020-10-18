@@ -25,3 +25,11 @@ VALUES
 ('Mandy', 'Moore', 2, null),
 ('James', 'Bond', 3, null),
 ('Matt', 'Damon', 4, null);
+
+INSERT INTO manager
+(first_name, last_name, role_id, department_id)
+VALUES
+('Jeff', 'Johnston', 1, 1),
+('Mandy', 'Moore', 2, 2),
+('James', 'Bond', 3, 3),
+('Matt', 'Damon', 4, 4);
