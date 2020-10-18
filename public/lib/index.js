@@ -1,16 +1,10 @@
-// const mysql = require('mysql2');
-// const inquirer = require('inquirer');
-// const consoleTable = require('console.table');
-// const {
-//     connection
-// } = require('../../server');
-// const { listenerCount } = require('process');
+var deptArray = require('../../server')
 
 const toDoQuestion = [{
     type: 'list',
     name: 'todo',
     message: 'What would you like to do?',
-    choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role']
+    choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Test', 'Exit \n']
 }];
 
 const addDeptQuestions = [{
@@ -57,19 +51,7 @@ const addRoleQuestions = [{
         type: 'list',
         name: 'department',
         message: 'What department does this role belong to?',
-        choices: [{
-            name: 'Sales',
-            value: 1
-        }, {
-            name: 'Engineering',
-            value: 2
-        }, {
-            name: 'Finance',
-            value: 3
-        }, {
-            name: 'Legal',
-            value: 4
-        }]
+        choices: deptArray
     }
 ];
 

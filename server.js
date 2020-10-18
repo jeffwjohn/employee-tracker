@@ -4,7 +4,7 @@ const inquirer = require('inquirer');
 const cTable = require('console.table');
 const Table = require('easy-table');
 const {
-    toDoQuestion ,
+    toDoQuestion,
     addDeptQuestions,
     addRoleQuestions,
     addEmployeeQuestions,
@@ -14,6 +14,7 @@ const Department = require('./public/lib/Department');
 const Role = require('./public/lib/Role');
 const Font = require('ascii-art-font');
 const chalk = require('chalk');
+var deptArray = [];
 var addRoleChoiceArray = [];
 var addEmployeeChoiceArray = []; //maybe for sending to localStorage?
 
@@ -62,10 +63,34 @@ function mainMenu() {
                 case ('Update an employee role'):
                     updateEmployeeRole();
                     break;
+                case ('Test'):
+                    testFunction();
+                    break;
                 case ('Exit \n'):
                     connection.end();
             }
         })
+};
+
+function testFunction() {
+    connection.query('SELECT * FROM role', (err, res) => {
+        if (err) throw err;
+        console.log(res);
+        console.log(res)
+        var choicesArray = [];
+        res.forEach(item => {
+            choicesArray.push(item.title)
+        })
+        inquirer.prompt([{
+            type: 'list',
+            name: 'lsit',
+            choices: choicesArray,
+            message: "Choose wisely"
+        }]).then(response => {
+            console.log(response);
+        })
+    });
+
 };
 
 function viewAllDepts() {
@@ -96,6 +121,7 @@ function viewAllEmployees() {
 };
 
 function addDept() {
+
     inquirer.prompt(addDeptQuestions)
         .then(answers => {
 
@@ -119,29 +145,97 @@ function addDept() {
         })
 };
 
+function testFunction() {
+    connection.query('SELECT * FROM role', (err, res) => {
+        if (err) throw err;
+        console.log(res);
+
+        var choicesArray = [];
+        res.forEach(item => {
+            choicesArray.push(item.title)
+        })
+        inquirer.prompt([{
+            type: 'list',
+            name: 'lsit',
+            choices: choicesArray,
+            message: "Choose wisely"
+        }]).then(response => {
+            console.log(response);
+        })
+    });
+
+};
+
 function addRole() {
-    inquirer.prompt(addRoleQuestions)
-        .then(answers => {
-            connection.query('INSERT INTO role SET ?', {
-                    title: answers.role,
-                    salary: answers.salary,
-                    department_id: answers.department
+    connection.query('SELECT * FROM department', (err, res) => {
+        if (err) throw err;
+        console.log(res);
+
+        var deptArray = [];
+        res.forEach(item => {
+            var {id, name} = item;
+            var item = {value: id, name};
+            deptArray.push(item)
+            var {value, name} = item;
+            var item = {id: value, name};
+            console.log(deptArray);
+        })
+        console.log(deptArray);
+        inquirer.prompt([{
+            type: 'input',
+            name: 'role',
+            message: 'Enter the role name.',
+            validate: nameInput => {
+                if (nameInput) {
+                    return true;
+                } else {
+                    console.log("Please enter the role name!");
+                    return false;
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'salary',
+            message: 'Enter the salary paid for this role.',
+            validate: nameInput => {
+                if (nameInput) {
+                    return true;
+                } else {
+                    console.log("Please enter the salary paid for the role you are creating!");
+                    return false;
+                }
+            }
+        },{
+                type: 'list',
+                name: 'department',
+                message: 'What department does this role belong to?',
+                choices: deptArray
+            }])
+            .then(answers => {
+                    console.log(answers);
+                    connection.query('INSERT INTO role SET ?', {
+                            title: answers.role,
+                            salary: answers.salary,
+                            department_id: answers.department
                 },
 
                 (err, res) => {
                     if (err) throw err;
 
-                    var role = new Role(
-                        answers.role,
-                        answers.salary,
-                        answers.department
-                    );
+                    // var role = new Role(
+                    //     answers.role,
+                    //     answers.salary,
+                    //     answers.department
+                    // );
 
-                    addEmployeeQuestions[2].choices.push(role);
-                    updateEmployeeRoleQuestions[1].choices.push(role);
+                    // addEmployeeQuestions[2].choices.push(role);
+                    // updateEmployeeRoleQuestions[1].choices.push(role);
                     mainMenu();
-                });
-        })
+                    // });
+                })
+            })
+    })
 };
 
 function addEmployee() {
@@ -156,7 +250,7 @@ function addEmployee() {
                 },
 
                 (err, res) => {
-                    if (err) throw err; 
+                    if (err) throw err;
                     mainMenu();
                 });
         })
@@ -194,6 +288,4 @@ function updateEmployeeRole() {
 
 };
 
-module.exports = {
-    connection
-};
+// module.exports = deptArray;
