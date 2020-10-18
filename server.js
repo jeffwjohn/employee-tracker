@@ -90,7 +90,7 @@ function testFunction() {
 };
 
 function viewAllDepts() {
-    connection.query('SELECT * FROM department', (err, res) => {
+    connection.query('SELECT department.id, department.name AS `Department` FROM department', (err, res) => {
         if (err) throw err;
         console.table(res);
         mainMenu();
@@ -99,7 +99,7 @@ function viewAllDepts() {
 };
 
 function viewAllRoles() {
-    connection.query('SELECT * FROM role', (err, res) => {
+    connection.query('SELECT role.id, role.title AS `Job Title`, department.name AS `Department`, role.salary AS `Salary` FROM role INNER JOIN department ON department.id = role.department_id', (err, res) => {
         if (err) throw err;
         console.table(res);
         mainMenu();
@@ -108,7 +108,7 @@ function viewAllRoles() {
 };
 
 function viewAllEmployees() {
-    connection.query('SELECT employee.id, employee.first_name AS `First Name`, employee.last_name AS `Last Name`, role.title AS `Job Title`, department.name AS Department, role.salary AS Salary, employee.manager_id AS Manager FROM employee INNER JOIN role ON employee.role_id=role.id INNER JOIN department ON department.id = role.department_id', (err, res) => {
+    connection.query('SELECT employee.id, employee.first_name AS `First Name`, employee.last_name AS `Last Name`, role.title AS `Job Title`, department.name AS Department, role.salary AS Salary, CONCAT(manager.first_name," ", manager.last_name) AS `Manager` FROM employee LEFT JOIN employee manager ON manager.id = employee.manager_id INNER JOIN role ON employee.role_id=role.id INNER JOIN department ON department.id = role.department_id', (err, res) => {
         if (err) throw err;
         console.table(res);
         mainMenu();
