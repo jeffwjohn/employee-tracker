@@ -1,4 +1,4 @@
-// get the client
+// DEPENDENCIES
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const cTable = require('console.table');
@@ -12,8 +12,10 @@ const {
 } = require('./public/lib/index.js');
 const Department = require('./public/lib/Department');
 const Role = require('./public/lib/Role');
+const Font = require('ascii-art-font');
+const chalk = require('chalk');
 var addRoleChoiceArray = [];
-var addEmployeeChoiceArray = [];
+var addEmployeeChoiceArray = []; //maybe for sending to localStorage?
 
 
 // create the connection to database
@@ -28,7 +30,9 @@ const connection = mysql.createConnection({
 connection.connect(err => {
     if (err) throw err;
     console.log('connected as id ' + connection.threadId + '\n');
-    console.log("\n Employee Manager \n");
+    console.log(chalk.bold.blue('Employee') + ' ' + chalk.bold.red('Manager!'));
+    // Font.fontPath = 'Fonts';
+    // Font.create('Employee Manager', 'Doom');
     mainMenu();
 });
 
@@ -83,7 +87,7 @@ function viewAllRoles() {
 };
 
 function viewAllEmployees() {
-    connection.query('SELECT * FROM employee', (err, res) => {
+    connection.query('SELECT employee.id, employee.first_name AS `First Name`, employee.last_name AS `Last Name`, role.title AS `Job Title`, department.name AS Department, role.salary AS Salary, employee.manager_id AS Manager FROM employee INNER JOIN role ON employee.role_id=role.id INNER JOIN department ON department.id = role.department_id', (err, res) => {
         if (err) throw err;
         console.table(res);
         mainMenu();

@@ -1,12 +1,10 @@
-const mysql = require('mysql2');
-const inquirer = require('inquirer');
-const consoleTable = require('console.table');
-const {
-    connection
-} = require('../../server');
-const { listenerCount } = require('process');
-
-
+// const mysql = require('mysql2');
+// const inquirer = require('inquirer');
+// const consoleTable = require('console.table');
+// const {
+//     connection
+// } = require('../../server');
+// const { listenerCount } = require('process');
 
 const toDoQuestion = [{
     type: 'list',
@@ -106,17 +104,36 @@ const addEmployeeQuestions = [{
         name: 'role',
         message: "Enter the employee's role.",
         choices: [{
-            name: 'Salesperson',
+            name: 'Sales Lead',
             value: 1
-        }, {
-            name: 'Software Engineer',
+        },
+        {
+            name:'Lead Engineer',
             value: 2
-        }, {
-            name: 'Accountant',
+        },
+        {
+            name: 'Lead Accountant',
             value: 3
-        }, {
-            name: 'Lawyer',
+        },
+        {
+            name: 'Legal Team Lead',
             value: 4
+        },
+        {
+            name: 'Salesperson',
+            value: 5
+        }, 
+        {
+            name: 'Software Engineer',
+            value: 6
+        }, 
+        {
+            name: 'Accountant',
+            value: 7
+        }, 
+        {
+            name: 'Lawyer',
+            value: 8
         }]
     },
     {
@@ -130,9 +147,12 @@ const addEmployeeQuestions = [{
             name: 'Mandy Moore',
             value: 2
         }, {
-            name: 'Matt Damon',
+            name: 'James Bond',
             value: 3
         }, {
+            name: 'Matt Damon',
+            value: 4
+        },{
             name: 'No manager assigned',
             value: null
         }]
