@@ -6,12 +6,7 @@ const Table = require('easy-table');
 const {
     toDoQuestion,
     addDeptQuestions,
-    addRoleQuestions,
-    addEmployeeQuestions,
-    updateEmployeeRoleQuestions
 } = require('./public/lib/index.js');
-const Department = require('./public/lib/Department');
-const Role = require('./public/lib/Role');
 const Font = require('ascii-art-font');
 const chalk = require('chalk');
 
@@ -59,34 +54,10 @@ function mainMenu() {
                 case ('Update an employee role'):
                     updateEmployeeRole();
                     break;
-                case ('Test'):
-                    testFunction();
-                    break;
                 case ('Exit \n'):
                     connection.end();
             }
         })
-};
-
-function testFunction() {
-    connection.query('SELECT * FROM role', (err, res) => {
-        if (err) throw err;
-        console.log(res);
-        console.log(res)
-        var choicesArray = [];
-        res.forEach(item => {
-            choicesArray.push(item.title)
-        })
-        inquirer.prompt([{
-            type: 'list',
-            name: 'lsit',
-            choices: choicesArray,
-            message: "Choose wisely"
-        }]).then(response => {
-            console.log(response);
-        })
-    });
-
 };
 
 function viewAllDepts() {
@@ -108,7 +79,7 @@ function viewAllRoles() {
 };
 
 function viewAllEmployees() {
-    connection.query('SELECT employee.id, employee.first_name AS `First Name`, employee.last_name AS `Last Name`, role.title AS `Job Title`, department.name AS Department, role.salary AS Salary, CONCAT(manager.first_name," ", manager.last_name) AS `Manager` FROM employee LEFT JOIN employee manager ON manager.id = employee.manager_id INNER JOIN role ON employee.role_id=role.id INNER JOIN department ON department.id = role.department_id', (err, res) => {
+    connection.query('SELECT employee.id, employee.first_name AS `First Name`, employee.last_name AS `Last Name`, role.title AS `Job Title`, department.name AS Department, role.salary AS Salary, IFNULL(CONCAT(manager.first_name," ", manager.last_name), "N/A ") AS `Manager` FROM employee LEFT JOIN employee manager ON manager.id = employee.manager_id INNER JOIN role ON employee.role_id=role.id INNER JOIN department ON department.id = role.department_id', (err, res) => {
         if (err) throw err;
         console.table(res);
         mainMenu();
@@ -130,27 +101,6 @@ function addDept() {
                     mainMenu();
                 });
         })
-};
-
-function testFunction() {
-    connection.query('SELECT * FROM role', (err, res) => {
-        if (err) throw err;
-        console.log(res);
-
-        var choicesArray = [];
-        res.forEach(item => {
-            choicesArray.push(item.title)
-        })
-        inquirer.prompt([{
-            type: 'list',
-            name: 'lsit',
-            choices: choicesArray,
-            message: "Choose wisely"
-        }]).then(response => {
-            console.log(response);
-        })
-    });
-
 };
 
 function addRole() {
@@ -362,8 +312,7 @@ function updateEmployeeRole() {
             var t = new Table;
             res.forEach(employee => {
                 t.cell('Employee ID', employee.id)
-                t.cell('first name', employee.first_name)
-                t.cell('last name', employee.last_name)
+                t.cell('Name', employee.first_name + " " + employee.last_name)
                 t.newRow()
             })
             console.log(t.toString())
@@ -371,7 +320,7 @@ function updateEmployeeRole() {
             inquirer.prompt([{
                         type: 'input',
                         name: 'employeeId',
-                        message: 'Enter ID of employee to update.'
+                        message: 'Enter ID number of employee to update:'
                     },
                     {
                         type: 'list',
