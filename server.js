@@ -7,7 +7,6 @@ const {
     toDoQuestion,
     addDeptQuestions,
 } = require('./public/lib/index.js');
-const Font = require('ascii-art-font');
 const chalk = require('chalk');
 
 // create the connection to database
@@ -23,8 +22,6 @@ connection.connect(err => {
     if (err) throw err;
     console.log('connected as id ' + connection.threadId + '\n');
     console.log(chalk.bold.blue('Employee') + ' ' + chalk.bold.red('Manager!'));
-    // Font.fontPath = 'Fonts';
-    // Font.create('Employee Manager', 'Doom');
     mainMenu();
 });
 
@@ -53,6 +50,9 @@ function mainMenu() {
                     break;
                 case ('Update an employee role'):
                     updateEmployeeRole();
+                    break;
+                case ('Delete an employee'):
+                    deleteEmployee();
                     break;
                 case ('Exit \n'):
                     connection.end();
@@ -98,6 +98,7 @@ function addDept() {
                 },
                 (err, res) => {
                     if (err) throw err;
+                    console.log(chalk.bold.yellow("Department added!"))
                     mainMenu();
                 });
         })
@@ -162,7 +163,6 @@ function addRole() {
                 }
             ])
             .then(answers => {
-                console.log(answers);
                 connection.query('INSERT INTO role SET ?', {
                         title: answers.role,
                         salary: answers.salary,
@@ -171,6 +171,7 @@ function addRole() {
 
                     (err, res) => {
                         if (err) throw err;
+                        console.log(chalk.bold.yellow("Role added!"))
                         mainMenu();
                     })
             })
@@ -203,7 +204,6 @@ function addEmployee() {
         })
         connection.query('SELECT * FROM manager', (err, res) => {
             if (err) throw err;
-            console.log(res);
 
             var managerArray = [];
             res.forEach(item => {
@@ -276,8 +276,11 @@ function addEmployee() {
 
                         (err, res) => {
                             if (err) throw err;
+                            console.log(chalk.bold.green("Employee added!"))
+                            
                             mainMenu();
-                        });
+                        })
+                        
                 })
         });
     })
@@ -336,6 +339,7 @@ function updateEmployeeRole() {
 
                         (err, res) => {
                             if (err) throw err;
+                            console.log(chalk.bold.blue("Employee updated!"))
                             mainMenu();
                         }
                     )
@@ -343,3 +347,35 @@ function updateEmployeeRole() {
         })
     });
 }
+
+function deleteEmployee() {
+    connection.query('SELECT * FROM employee', (err, res) => {
+        if (err) throw err;
+        var t = new Table;
+        res.forEach(employee => {
+            t.cell('Employee ID', employee.id)
+            t.cell('Name', employee.first_name + " " + employee.last_name)
+            t.newRow()
+        })
+        console.log(t.toString())
+
+        inquirer.prompt([{
+                    type: 'input',
+                    name: 'employeeId',
+                    message: 'Enter ID number of employee to delete:'
+                },
+            ])
+            .then(answers => {
+
+                connection.query('DELETE FROM employee WHERE id = ?',
+                    [answers.employeeId],
+
+                    (err, res) => {
+                        if (err) throw err;
+                        console.log(chalk.bold.red("Employee deleted!"))
+                        mainMenu();
+                    }
+                )
+            })
+    })
+};
